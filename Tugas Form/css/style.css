@@ -1,0 +1,57 @@
+body {
+  font-family: "Raleway Thin", sans-serif;
+  background: #9cb8a0;
+}
+
+h2 {
+  text-align: center;
+  font-weight: 250;
+  padding-bottom: -20px;
+}
+
+.tulisan_login {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.box {
+  width: 450px;
+  background: #d3e0ce;
+  margin: 60px auto;
+  padding: 30px 20px;
+  border-radius: 14px;
+}
+
+label {
+  font-size: 11pt;
+}
+
+.form_login {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  font-size: 11pt;
+  margin-bottom: 20px;
+  border: none;
+}
+.radio {
+  box-sizing: border-box;
+  font-size: 11pt;
+  margin-bottom: 20px;
+}
+
+.tombol {
+  background: #e2b995;
+  color: white;
+  font-size: 11pt;
+  width: 100%;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+}
+
+.link {
+  color: #232323;
+  text-decoration: none;
+  font-size: 10pt;
+}
