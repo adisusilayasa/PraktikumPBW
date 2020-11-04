@@ -28,14 +28,30 @@ while ($pecahkategori = $ambilkategori->fetch_assoc()) {
         <div class="col-lg-9">
             <h3 class="my-4">Produk Terbaru</h3>
             <div class="row">
-                <?php $ambilproduk = $koneksi->query("SELECT * FROM produk ORDER BY id_produk DESC ");
-                while ($perproduk = $ambilproduk->fetch_assoc()) {
+                <!-- sidebar -->
+
+                <!-- Main content -->
+                <?php
+                $batas = 5;
+                $halaman = isset($_GET['halaman']) ? (int)$_GET['halaman'] : 1;
+                $halaman_awal = ($halaman > 1) ? ($halaman * $batas) - $batas : 0;
+
+                $next = $halaman + 1;
+                $previous = $halaman - 1;
+
+                $data = mysqli_query($koneksi, "select * from produk");
+                $jumlah_data = mysqli_num_rows($data);
+                $total_halaman = ceil($jumlah_data / $batas);
+
+                $data_produk = mysqli_query($koneksi, "SELECT * FROM produk ORDER BY id_produk DESC  limit $halaman_awal, $batas");
+                $nomor = $halaman_awal + 1;
+                while ($perproduk = mysqli_fetch_array($data_produk)) {
                 ?>
-                    <div class="col-lg-3 col-xs-12 col-sm-6 mb-3">
+                    <div class="col-lg-3 col-xs-12 col-sm-6 mb-3" style="width: 300px;">
                         <div class="card">
-                            <img class="card-img-top" src="foto_produk/<?= $perproduk['foto_produk'] ?>" alt="Card image cap">
+                            <img class="card-img-top" style="overflow: hidden ;max-height: 200px; min-height: 150px;object-fit: cover;" src="foto_produk/<?= $perproduk['foto_produk'] ?>" alt="Card image cap">
                             <div class="card-body">
-                                <h5 class="card-title"><a href="detail.php?&id=<?= $perproduk['id_produk'] ?>"><?= $perproduk['nama_produk'] ?></a></h5>
+                                <h5 class="card-title" style="overflow:hidden; height: 48px;"><a href="detail.php?&id=<?= $perproduk['id_produk'] ?>"> <?= $perproduk['nama_produk']  ?></a></h5>
                                 <h6 class="card-title">Rp. <?= number_format($perproduk['harga_produk']) ?></h6>
                                 <?php if ($perproduk['stok_produk'] !== '0') : ?>
                                     <a href="beli.php?id=<?= $perproduk['id_produk'] ?>"><button class="btn btn-primary">Beli</button></a>
@@ -46,9 +62,35 @@ while ($pecahkategori = $ambilkategori->fetch_assoc()) {
                             </div>
                         </div>
                     </div>
-                <?php } ?>
+                <?php
+                }
+                ?>
+                </tbody>
+                </table>
+
             </div>
         </div>
+    </div>
+    <div class="container">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" <?php if ($halaman > 1) {
+                                            echo "href='?halaman=$previous'";
+                                        } ?>>Previous</a>
+            </li>
+            <?php
+            for ($x = 1; $x <= $total_halaman; $x++) {
+            ?>
+                <li class="page-item"><a class="page-link" href="?halaman=<?php echo $x ?>"><?php echo $x; ?></a></li>
+            <?php
+            }
+            ?>
+            <li class="page-item">
+                <a class="page-link" <?php if ($halaman < $total_halaman) {
+                                            echo "href='?halaman=$next'";
+                                        } ?>>Next</a>
+            </li>
+        </ul>
     </div>
 </div>
 <!-- ========================= SECTION  END// ========================= -->

@@ -60,7 +60,7 @@
         }
     </style>
 
-    <title>Sisuka</title>
+    <title>Qranjang</title>
 </head>
 
 <body>
