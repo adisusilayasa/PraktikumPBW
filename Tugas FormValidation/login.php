@@ -1,83 +1,80 @@
-<?php
-
-session_start();
-
-require_once("koneksi.php");
-
-include 'navbar.php';
-if (isset($_SESSION["user"])) header("Location: index.php");
-if (isset($_POST['login'])) {
-
-	$username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
-	$password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-
-	$sql = "SELECT * FROM user WHERE username=:username OR email=:email";
-	$stmt = $db->prepare($sql);
-
-	// bind parameter ke query
-	$params = array(
-		":username" => $username,
-		":email" => $username
-	);
-
-	$stmt->execute($params);
-
-	$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-	// jika user terdaftar
-	if ($user) {
-		// verifikasi password
-		if (password_verify($password, $user["password"])) {
-			// buat Session
-			session_start();
-			$_SESSION["user"] = $user;
-			// login sukses, alihkan ke halaman timeline
-			header("Location: index.php?pesan=sukses");
-		}
-	} else {
-		header("location:index.php?pesan=gagal");
-	}
-}
-?>
+<!DOCTYPE html>
+<html lang="en">
 
 
+<head>
+    <title>Belajar Form Validation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+    <div class="navbar-wrapper">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="container">
+                <a href="#" class="navbar-brand">
+                    <h4>Home</h4>
+                </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ml-auto px-2">
+                        <form class="form-inline" action="#" method="get">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search..." name="keyword">
+                            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+                        </form>
+                        <a href="register.php" class="nav-item nav-link px-2">Sign up</a>
+                        <li class="nav-item pl-2 mb-2 mb-md-0">
+                            <a href="login.php" type="button" class="btn btn-outline-info btn-md btn-rounded  waves-effect px-2">Login</a>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</head>
 
 <body>
+    <div class="container">
+        <div class="card mx-auto d-block" style="width: 520px; height: 350px;">
+            <div class="card mx-auto d-block border-0" style="width: 500px; height: 330px;">
+                <br>
+                <h3 class="text-center ">Login</h3>
+                <br>
+                <form name="login" action="" method="POST">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input class="form-control" type="text" name="username" id="username" placeholder="Username atau email" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input class="form-control" type="password" name="password" id="password" placeholder="Password" />
+                    </div>
+                    <input type="submit" class="btn btn-success btn-block" onclick="validasi()" name="login" value="Masuk" />
 
-	<?php
-	if (isset($_GET['pesan'])) {
-		if ($_GET['pesan'] == "gagal") {
-			echo "<div class='alert alert-danger'> Username dan Password tidak sesuai !</div>";
-		}
-	}
+                </form>
+            </div>
+        </div>
+    </div>
 
-	?>
+    <script>
+        function validasi() {
+            if (document.forms["login"]["username"].value != "") {
+                if (document.forms["login"]["password"].value != "") {
+                    alert("Semua data terisi dengan benar");
+                    document.getElementById("login").submit();
+                    return true;
 
-	<br>
-	<div class="card mx-auto d-block" style="width: 520px; height: 350px;">
-		<div class="card mx-auto d-block border-0" style="width: 500px; height: 330px;">
-			<br>
-			<h3 class="text-center ">Login</h3>
-			<br>
-			<form action="" method="POST">
-				<div class="form-group">
-					<label for="username">Username</label>
-					<input class="form-control" type="text" name="username" placeholder="Username atau email" />
-				</div>
-
-
-				<div class="form-group">
-					<label for="password">Password</label>
-					<input class="form-control" type="password" name="password" placeholder="Password" />
-				</div>
-
-				<input type="submit" class="btn btn-success btn-block" name="login" value="Masuk" />
-
-			</form>
-		</div>
-	</div>
+                } else {
+                    alert("Password tidak boleh kosong");
+                    return false;
+                }
+            } else {
+                alert("Username masih kosong");
+                return false;
+            }
+        }
+    </script>
 </body>
 
 </html>
